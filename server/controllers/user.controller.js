@@ -3,9 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  // register new user accounts
     register: (req, res) => {
-        // 
         const user = new User(req.body);
         console.log("in register");
         console.log(user);
@@ -34,15 +32,12 @@ module.exports = {
             if(userRecord === null) {
             res.status(400).json({ message: "email address not found"});
             } else {
-            // compare passwords using bcrypt
             bcrypt.compare(req.body.password, userRecord.password)
                 .then((passwordValid) => {
                 if(passwordValid) {
                     console.log("password is valid");
                     res
-                    // plain text cookie that anyone can look at and read
                     .cookie("userdata", { username: userRecord.username })
-                    // encrypted / secured data in cookie
                     .cookie("usertoken", 
                         jwt.sign({
                             user_id: userRecord._id,
